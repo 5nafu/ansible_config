@@ -1,0 +1,3 @@
+# Server Tasks
+
+- include: basic_apps.yml

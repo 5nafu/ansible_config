@@ -1,0 +1,9 @@
+- name: Install common software 
+  apt: name={{ item }} state=present
+  with_items:
+    - lvm2
+    - gdisk
+    - bridge-utils
+    - parted
+    - qemu-kvm
+

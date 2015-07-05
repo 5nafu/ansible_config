@@ -1,0 +1,26 @@
+# Install basic apps and remove harmful/unneeded apps
+
+
+- name: Install common software 
+  apt: name={{ item }} state=present
+  with_items:
+    - vim
+    - git
+    - htop
+    - subversion
+    - tmux
+    - sudo
+    - hdparm
+    - iotop
+    - mtr
+    - nmap
+    - ntpdate
+    - tcpdump
+    - iputils-tracepath
+    - tree
+
+
+- name: Remove harmful / unneeded
+  apt: name={{ item }} state=absent
+  with_items:
+    - ftp
