@@ -1,2 +1,4 @@
 ---
-- include: ansible_pull.yml
+- hosts: 127.0.0.1
+  connection: local
+  - include: ansible_pull.yml
