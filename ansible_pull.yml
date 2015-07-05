@@ -15,13 +15,13 @@
 #
 ---
 
-- hosts: pull_mode_hosts
-  remote_user: root
+- hosts: 127.0.0.1
+  connection: local
 
   vars:
 
     # schedule is fed directly to cron
-    schedule: '*/15 * * * *'
+    schedule: '* * * * *'
 
     # User to run ansible-pull as from cron
     cron_user: root
