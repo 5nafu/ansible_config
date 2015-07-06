@@ -18,6 +18,7 @@
     - tcpdump
     - iputils-tracepath
     - tree
+    - zsh
 
 
 - name: Remove harmful / unneeded
