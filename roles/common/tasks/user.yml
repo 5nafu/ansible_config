@@ -1,0 +1,19 @@
+- name: Add snafu Account
+  user: name=snafu comment="Tobias Vollmer" append=yes groups=sudo shell=/usr/bin/zsh
+
+- name: Add ssh pub-keys for snafu
+  authorized_key:
+    user: snafu
+    exclusive: yes
+    key: "{{ snafu_key }}"
+
+- name: Add h0uz3 Account
+  user: name=h0uz3 comment="Sascha Kaupp" append=yes groups=sudo shell=/usr/bin/zsh
+
+- name: Add ssh pub-keys for snafu
+  authorized_key:
+    user: h0uz3
+    exclusive: yes
+    key: "{{ h0uz3_key }}"
+
+
