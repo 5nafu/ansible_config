@@ -1,5 +1,5 @@
 - name: Add snafu Account
-  user: name=snafu comment="Tobias Vollmer" append=yes groups=sudo shell=/usr/bin/zsh
+  user: name=snafu comment="Tobias Vollmer" append=yes groups=sudo shell=/usr/bin/bash
 
 - name: Add ssh pub-keys for snafu
   authorized_key:
