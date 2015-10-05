@@ -21,6 +21,9 @@
     - zsh
     - facter
     - apt-transport-https
+    - ca-certificates
+    - locate
+    - molly-guard
 
 
 - name: Remove harmful / unneeded
