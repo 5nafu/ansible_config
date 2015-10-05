@@ -1,4 +1,4 @@
-- name: Install common hypervisor software 
+- name: Install common hypervisor software
   apt: name={{ item }} state=present
   with_items:
     - lvm2
@@ -6,4 +6,7 @@
     - bridge-utils
     - parted
     - qemu-kvm
-
+    - seabios
+    - vgabios
+    - libvirt-bin
+    - libvirt-doc
