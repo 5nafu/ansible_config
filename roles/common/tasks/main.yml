@@ -1,5 +1,6 @@
 # Common Tasks
 
+- include: hostname.yml
 - include: basic_apps.yml
 - include: user.yml
 - include: sudoers.yml
