@@ -3,3 +3,4 @@
 - include: basic_apps.yml
 - include: user.yml
 - include: sudoers.yml
+- include: ntp.yml

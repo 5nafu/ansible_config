@@ -1,0 +1,14 @@
+- name: Install ntp software
+  apt: name=ntp state=present
+- name: Remove debian.pool.ntp.org
+  lineinfile: dest=/etc/ntp.conf state=absent regexp='^server .*.debian.pool.ntp.org iburst'
+  notify:
+    - restart ntp
+- name: Add Hetzner NTP
+  lineinfile: dest=/etc/ntp.conf state=present line="{{item}}"
+  with_items:
+    - server ntp1.hetzner.de iburst
+    - server ntp2.hetzner.de iburst
+    - server ntp3.hetzner.de iburst
+  notify:
+    - restart ntp
