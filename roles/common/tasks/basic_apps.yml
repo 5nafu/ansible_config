@@ -24,6 +24,7 @@
     - ca-certificates
     - locate
     - molly-guard
+    - telnet
 
 
 - name: Remove harmful / unneeded
