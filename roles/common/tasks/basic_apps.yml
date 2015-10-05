@@ -1,7 +1,7 @@
 # Install basic apps and remove harmful/unneeded apps
 
 
-- name: Install common software 
+- name: Install common software
   apt: name={{ item }} state=present
   with_items:
     - vim
@@ -20,6 +20,7 @@
     - tree
     - zsh
     - facter
+    - apt-transport-https
 
 
 - name: Remove harmful / unneeded

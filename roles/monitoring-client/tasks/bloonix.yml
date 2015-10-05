@@ -1,0 +1,24 @@
+# Install Bloonix Agent
+- name: Add bloonix Repository
+  apt_repository: repo='deb https://download.bloonix.de/repos/debian/ {{ ansible_lsb.codename }} main' state=present
+
+- name: Add bloonix Key
+  apt_key: url=https://download.bloonix.de/debian/bloonix.gpg state=present
+
+- name: Install bloonix Agent
+  apt: name={{ item }} state=present update_cache=yes
+  with_items:
+    - bloonix-agent
+    - bloonix-plugins-linux
+    - bloonix-plugins-sensors
+
+- name: Add bloonix Server
+  replace: dest=/etc/bloonix/agent/main.conf regexp='@@SERVER@@' replace='monitor.tvollmer.de'
+
+- name: Configure host_id
+  replace: dest=/etc/bloonix/agent/main.conf regexp='^.*(# ENTER THE HOST ID)' replace="    host_id  {{bloonix_host_id}} \1"
+
+- name: Configure password
+  replace: dest=/etc/bloonix/agent/main.conf regexp='^.*(# ENTER THE PASSWORD)' replace="    password {{bloonix_password}} \1"
+- name: Activate the host
+  replace: dest=/etc/bloonix/agent/main.conf regexp='^.*(# ACTIVATE THE HOST)' replace="    active {{bloonix_active}} \1"
