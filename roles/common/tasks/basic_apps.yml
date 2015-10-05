@@ -19,6 +19,7 @@
     - iputils-tracepath
     - tree
     - zsh
+    - facter
 
 
 - name: Remove harmful / unneeded

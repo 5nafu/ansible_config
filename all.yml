@@ -2,4 +2,5 @@
 - hosts: all
   roles: 
     - common
+    - { role: hw, when: facter_is_virtual == "false" }
 
