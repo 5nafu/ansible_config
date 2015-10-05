@@ -1,0 +1,10 @@
+Unattended-Upgrade::Origins-Pattern {
+      "o=Debian,a=${distro_codename}";
+      "o=Debian,a=${distro_codename}-updates";
+      "o=Debian,a=${distro_codename}-backports";
+        "origin=Debian,archive=${distro_codename},label=Debian-Security";
+};
+Unattended-Upgrade::Package-Blacklist {
+};
+Unattended-Upgrade::MinimalSteps "true";
+Unattended-Upgrade::Mail "info@tvollmer.de";
