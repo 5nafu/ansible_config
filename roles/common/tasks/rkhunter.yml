@@ -1,0 +1,59 @@
+- name: Install rkhunter software
+  apt: name=rkhunter state=present
+
+- name: set default values
+  replace: dest=/etc/default/rkhunter regexp='^.*({{ item.name }}).*$' replace='\1={{ item.set_to }}'
+  with_items:
+    - { name: 'CRON_DAILY_RUN', set_to: 'yes' }
+    - { name: 'CRON_DB_UPDATE', set_to: 'yes' }
+    - { name: 'DB_UPDATE_EMAIL', set_to: 'false' }
+    - { name: 'REPORT_EMAIL', set_to: 'root' }
+    - { name: 'APT_AUTOGEN', set_to: 'yes' }
+    - { name: 'NICE', set_to: '0' }
+    - { name: 'RUN_CHECK_ON_BATTERY', set_to: 'false' }
+
+- name: set config values
+  replace: dest=/etc/rkhunter.conf regexp='^.*({{ item.name }}).*$' replace='\1="{{ item.set_to }}"'
+  with_items:
+    - { name: 'ALLOW_SSH_PROT_V1', set_to: '0' }
+    - { name: 'ALLOW_SSH_ROOT_USER', set_to: 'without-password' }
+    - { name: 'ALLOW_SYSLOG_REMOTE_LOGGING', set_to: '0' }
+    - { name: 'APPEND_LOG', set_to: '0' }
+    - { name: 'AUTO_X_DETECT', set_to: '1' }
+    - { name: 'COLOR_SET2', set_to: '0' }
+    - { name: 'COPY_LOG_ON_ERROR', set_to: '1' }
+    - { name: 'DBDIR', set_to: '/var/lib/rkhunter/db' }
+    - { name: 'DISABLE_TESTS', set_to: 'suspscan hidden_procs deleted_files packet_cap_apps apps' }
+    - { name: 'DISABLE_UNHIDE', set_to: '1' }
+    - { name: 'ENABLE_TESTS', set_to: 'all' }
+    - { name: 'IMMUTABLE_SET', set_to: '0' }
+    - { name: 'INSTALLDIR', set_to: '/usr' }
+    - { name: 'LOCK_TIMEOUT', set_to: '300' }
+    - { name: 'LOGFILE', set_to: '/var/log/rkhunter.log' }
+    - { name: 'MAIL_CMD', set_to: 'mail -s "[rkhunter] Warnings found for ${HOST_NAME}"' }
+    - { name: 'MAIL-ON-WARNING', set_to: '' }
+    - { name: 'MIRRORS_MODE', set_to: '0' }
+    - { name: 'PHALANX2_DIRTEST', set_to: '0' }
+    - { name: 'ROTATE_MIRRORS', set_to: '1' }
+    - { name: 'SCRIPTDIR', set_to: '/usr/share/rkhunter/scripts' }
+    - { name: 'SHOW_LOCK_MSGS', set_to: '1' }
+    - { name: 'SUSPSCAN_MAXSIZE', set_to: '10240000' }
+    - { name: 'SUSPSCAN_TEMP', set_to: '/dev/shm' }
+    - { name: 'SUSPSCAN_THRESH', set_to: '200' }
+    - { name: 'TMPDIR', set_to: '/var/lib/rkhunter/tmp' }
+    - { name: 'UPDATE_LANG', set_to: '' }
+    - { name: 'UPDATE_MIRRORS', set_to: '1' }
+    - { name: 'USE_LOCKING', set_to: '0' }
+    - { name: 'WHITELISTED_IS_WHITE', set_to: '0' }
+
+- name: whitelist scripts
+  lineinfile: dest=/etc/rkhunter.conf state=present line='{{ item }}'
+  with_items:
+    - SCRIPTWHITELIST='/bin/egrep'
+    - SCRIPTWHITELIST='/bin/fgrep'
+    - SCRIPTWHITELIST='/bin/which'
+    - SCRIPTWHITELIST='/usr/bin/groups'
+    - SCRIPTWHITELIST='/usr/bin/ldd'
+    - SCRIPTWHITELIST='/usr/sbin/adduser'
+    #- SCRIPTWHITELIST='/usr/bin/lwp-request'
+    #- SCRIPTWHITELIST='/usr/sbin/prelink'

@@ -4,3 +4,4 @@
 - include: user.yml
 - include: sudoers.yml
 - include: ntp.yml
+- include: rkhunter.yml
