@@ -5,4 +5,4 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"
 
 git pull
 
-ansible-playbook site.yml --ask-vault-pass
+ansible-playbook site.yml --ask-vault-pass $@

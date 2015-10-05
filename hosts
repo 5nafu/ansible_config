@@ -1,2 +1,5 @@
 [hypervisor]
 srv.buero.tvollmer.de ansible_ssh_user=root
+
+[monitor]
+monitor.tvollmer.de ansible_host=78.46.205.62 ansible_ssh_user=root
