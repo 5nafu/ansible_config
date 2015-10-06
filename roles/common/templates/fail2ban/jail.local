@@ -1,0 +1,21 @@
+[DEFAULT]
+action = %(action_b)s
+destemail = {{ fail2ban_destemail }}
+sendermail = {{ fail2ban_sendermail }}
+blocklist_de_apikey= "{{ fail2ban_blocklist_de_apikey }}"
+action_b = %(banaction)s[name=%(__name__)s, port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
+           blocklist_de[email="%(sendermail)s", service=%(__name__)s, apikey="%(blocklist_de_apikey)s"]
+
+
+[sasl]
+bantime = 86400
+
+[blocklist]
+enabled  =  true
+port     = all
+banaction = iptables-allports
+filter   =  sshd
+logpath  =  /etc/fail2ban/empty.log
+maxretry =  1
+bantime  =  36000
+action   = %(action_)s

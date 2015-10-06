@@ -1,3 +1,50 @@
 - name: Install fail2ban software
   apt: name=fail2ban state=present
-# TODO: Add Configuration!!!
+  notify:
+    - restart fail2ban
+
+- name: Add /etc/fail2ban/empty.log for blocklist
+  copy: content="" dest=/etc/fail2ban/empty.log owner=root group=root mode=0644
+  notify:
+    - restart fail2ban
+
+- name: Copy Custom Files to server
+  template: src=fail2ban/{{ item.src }} dest=/etc/fail2ban/{{ item.src }} owner=root group=root mode={{ item.mode }}
+  with_items:
+    - { src: "jail.local", mode: "0644" }
+    - { src: "action.d/blocklist_de.conf", mode: "0644" }
+  notify:
+    - restart fail2ban
+
+- name: Download blocklist python tool
+  get_url: url=https://raw.githubusercontent.com/5nafu/fail2ban-blocklist-importer/master/blocklist.py dest=/etc/fail2ban/blocklist.py mode=0755
+  notify:
+    - restart fail2ban
+
+- name: Download blocklist cronjob
+  get_url: url=https://raw.githubusercontent.com/5nafu/fail2ban-blocklist-importer/master/blocklist-cronjob dest=/etc/cron.d/blocklist mode=0644
+  notify:
+    - restart fail2ban
+
+- name: Patch cronjob to send notification to me
+  lineinfile: dest=/etc/cron.d/blocklist regexp='^.*MAILTO=.*$' line='MAILTO=info@tvollmer.de'
+  notify:
+    - restart fail2ban
+
+- name: Add custom values to jail.conf
+  ini_file: dest=/etc/fail2ban/jail.conf section="{{ item.section }}" option="{{ item.option }}" value="{{ item.value }}"
+  with_items:
+    - { section: "DEFAULT" , option: "ignoreip" , value: "127.0.0.1/8 78.46.109.40/32 buero.tvollmer.de" }
+    - { section: "DEFAULT" , option: "destemail" , value: "{{ fail2ban_destemail}}" }
+    - { section: "DEFAULT" , option: "sendermail" , value: "{{ fail2ban_sendermail }}" }
+    - { section: "DEFAULT" , option: "sender" , value: "{{ fail2ban_sendermail }}" }
+    - { section: "DEFAULT" , option: "banaction" , value: "iptables-multiport-log" }
+    - { section: "ssh-ddos", option: "enabled" , value: "true" }
+    - { section: "apache", option: "enabled" , value: "{{ fail2ban_jail_apache }}" }
+    - { section: "proftpd", option: "enabled" , value: "{{ fail2ban_jail_proftpd }}" }
+    - { section: "postfix", option: "enabled" , value: "true" }
+    - { section: "sasl", option: "enabled" , value: "true" }
+    - { section: "sasl", option: "logpath" , value: "{{ fail2ban_jail_sasl_file }}" }
+    - { section: "dovecot", option: "enabled" , value: "false" }
+  notify:
+    - restart fail2ban
