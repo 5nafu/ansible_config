@@ -25,9 +25,11 @@
     - locate
     - molly-guard
     - telnet
+    - postfix
 
 
 - name: Remove harmful / unneeded
   apt: name={{ item }} state=absent
   with_items:
     - ftp
+    - exim
