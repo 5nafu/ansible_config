@@ -6,3 +6,4 @@
 - include: sudoers.yml
 - include: unattended-upgrades.yml
 - include: ntp.yml
+- include: security.yml
