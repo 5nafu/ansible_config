@@ -5,6 +5,14 @@
     - openssh-blacklist
     - openssh-blacklist-extra
 
+- name: No Root Login
+  lineinfile:
+    dest=/etc/ssh/sshd_config
+    state=present
+    regexp='^PermitRootLogin'
+    line='PermitRootLogin no'
+  notify:
+    - restart ssh
 
 # Include other Tasks
 
