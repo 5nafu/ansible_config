@@ -1,0 +1,12 @@
+- name: Install security software
+  apt: name={{ item }} state=present
+  with_items:
+    - ebtables
+    - openssh-blacklist
+    - openssh-blacklist-extra
+
+
+# Include other Tasks
+
+- include: rkhunter.yml
+- include: fail2ban.yml

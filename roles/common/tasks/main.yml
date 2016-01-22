@@ -6,5 +6,3 @@
 - include: sudoers.yml
 - include: unattended-upgrades.yml
 - include: ntp.yml
-- include: rkhunter.yml
-- include: fail2ban.yml

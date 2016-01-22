@@ -16,6 +16,9 @@
     - nmap
     - ntpdate
     - tcpdump
+    - netcat-openbsd
+    - ethtool
+    - mawk
     - iputils-tracepath
     - tree
     - zsh
