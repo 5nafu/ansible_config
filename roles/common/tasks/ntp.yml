@@ -1,3 +1,11 @@
+- name: Set timezone
+  copy: content="Europe/Berlin\n" dest=/etc/timezone owner=root group=root mode=0644
+  become: true
+  register: timezone
+- name: Reconfigure Timezone Data
+  shell: dpkg-reconfigure -f noninteractive tzdata
+  become: true
+  when: timezone.changed
 - name: Install ntp software
   apt: name=ntp state=present
 - name: Remove debian.pool.ntp.org
