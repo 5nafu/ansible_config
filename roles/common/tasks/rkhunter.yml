@@ -16,7 +16,7 @@
   replace: dest=/etc/rkhunter.conf regexp='^.*({{ item.name }}).*$' replace='\1="{{ item.set_to }}"'
   with_items:
     - { name: 'ALLOW_SSH_PROT_V1', set_to: '0' }
-    - { name: 'ALLOW_SSH_ROOT_USER', set_to: 'without-password' }
+    - { name: 'ALLOW_SSH_ROOT_USER', set_to: '{{ sshd_permit_root_login}}' }
     - { name: 'ALLOW_SYSLOG_REMOTE_LOGGING', set_to: '0' }
     - { name: 'APPEND_LOG', set_to: '0' }
     - { name: 'AUTO_X_DETECT', set_to: '1' }

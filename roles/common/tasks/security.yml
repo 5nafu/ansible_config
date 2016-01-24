@@ -10,7 +10,7 @@
     dest=/etc/ssh/sshd_config
     state=present
     regexp='^PermitRootLogin'
-    line='PermitRootLogin no'
+    line='PermitRootLogin {{ sshd_permit_root_login}}'
   notify:
     - restart ssh
 
