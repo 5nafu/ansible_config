@@ -1,3 +1,0 @@
----
-- hosts: localhost
-  - include: roles/common/tasks/basic_apps.yml

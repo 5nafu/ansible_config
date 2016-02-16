@@ -1,0 +1,6 @@
+- name: Install workstation software
+  apt: name={{ item }} state=present
+  with_items:
+    - conky
+    - vlc
+    - terminology
