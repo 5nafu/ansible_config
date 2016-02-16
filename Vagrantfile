@@ -13,7 +13,7 @@ Vagrant.configure(2) do |config|
         "guest" => ["srv"],
         "mailserver" => ["srv"]
     }
-    ansible.playbook = "site.yml"
+    ansible.playbook = "datacenter.yml"
     ansible.raw_arguments = [
       "--vault-password-file=./password.txt",
       "-b",

@@ -11,4 +11,4 @@ ansible datacenter  --vault-password-file ./password.txt  -a "apt-get install -y
 
 echo "running playbook"
 # Run playbook.
-ansible-playbook site.yml --vault-password-file ./password.txt $@
+ansible-playbook datacenter.yml --vault-password-file ./password.txt $@

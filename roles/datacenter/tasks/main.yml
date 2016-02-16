@@ -1,9 +1,7 @@
-# Common Tasks
+# Datacenter Tasks
 
-- include: hostname.yml
 - include: basic_apps.yml
+- include: fail2ban.yml
+- include: hostname.yml
+- include: rkhunter.yml
 - include: user.yml
-- include: sudoers.yml
-- include: unattended-upgrades.yml
-- include: ntp.yml
-- include: security.yml

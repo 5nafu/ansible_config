@@ -2,6 +2,8 @@
 - hosts: datacenter
   roles:
     - common
+    - { role: datacenter, when: "'datacenter' in group_names" }
     - { role: hw, when: facter_is_virtual == "false" }
     - { role: monitoring-client, when: "'monitoring' not in group_names" }
     - { role: postfix-satellite, when: "'mailserver' not in group_names" }
+- include: monitoring.yml
