@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: datacenter
   roles:
     - common
     - { role: hw, when: facter_is_virtual == "false" }
