@@ -10,4 +10,4 @@ srv.buero.tvollmer.de ansible_ssh_user=root
 monitor ansible_ssh_host=78.46.205.62 ansible_ssh_user=root
 
 [local]
-localhost ansible_connection=local
+localhost ansible_connection=local ansible_become=true
