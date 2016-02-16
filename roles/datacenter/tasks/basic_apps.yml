@@ -26,9 +26,10 @@
     - apt-transport-https
     - ca-certificates
     - locate
+    - molly-guard
     - telnet
     - postfix
-    - multitail
+
 
 - name: Remove harmful / unneeded
   apt: name={{ item }} state=absent
