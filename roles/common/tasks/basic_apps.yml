@@ -29,6 +29,7 @@
     - telnet
     - postfix
     - multitail
+    - mc
 
 - name: Remove harmful / unneeded
   apt: name={{ item }} state=absent
