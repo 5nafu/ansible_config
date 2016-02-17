@@ -1,3 +1,4 @@
 # Workstation Tasks
 
 - include: basic_apps.yml
+- include: google_chrome.yml
