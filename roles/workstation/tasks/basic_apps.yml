@@ -9,3 +9,5 @@
     - xfce4-goodies
     - xsensors
     - lm-sensors
+    - nfs-common
+    - openjdk-8-jre
