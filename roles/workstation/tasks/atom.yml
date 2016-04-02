@@ -1,0 +1,27 @@
+- name: Check if atom is installed
+  command: dpkg-query -W -f='${Version}' atom
+  register: atom_check_deb
+  failed_when: atom_check_deb.rc > 1
+  changed_when: "'{{atom_version}}' not in '{{atom_check_deb.stdout}}'"
+
+- name: create a temp directory
+  command: mktemp -d "{{ lookup('env', 'TMPDIR') |default('/tmp', true) }}/ansible.XXXX"
+  register: tempdir
+  when: atom_check_deb.changed
+
+- debug: var=atom_check_deb
+
+- name: Download atom
+  get_url: 
+    url="{{ atom_url }}"
+    dest="{{ tempdir.stdout }}/{{ atom_name }}.deb"
+  when: atom_check_deb.changed
+
+- name: Install atom
+  apt: deb="{{ tempdir.stdout }}/{{ atom_name }}.deb"
+  sudo: true
+  when: atom_check_deb.changed
+
+- name: Remove Tempdir
+  file: path={{ tempdir.stdout }} state=absent
+  when: atom_check_deb.changed
