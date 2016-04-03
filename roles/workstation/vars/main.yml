@@ -2,3 +2,7 @@
 atom_name: atom-amd64
 atom_version: 1.6.2
 atom_url: https://github.com/atom/atom/releases/download/v{{ atom_version}}/atom-amd64.deb
+
+xnview_name: XnViewMP-linux-x64.deb 
+xnview_version: 0.79
+xnview_url: http://download.xnview.com/XnViewMP-linux-x64.deb 

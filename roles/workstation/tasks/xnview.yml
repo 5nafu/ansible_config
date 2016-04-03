@@ -1,0 +1,25 @@
+- name: Check if xnview is installed
+  command: dpkg-query -W -f='${Version}' xnview
+  register: xnview_check_deb
+  failed_when: xnview_check_deb.rc > 1
+  changed_when: "'{{xnview_version}}' not in '{{xnview_check_deb.stdout}}'"
+
+- name: create a temp directory
+  command: mktemp -d "{{ lookup('env', 'TMPDIR') |default('/tmp', true) }}/ansible.XXXX"
+  register: tempdir
+  when: xnview_check_deb.changed
+
+- name: Download xnview
+  get_url: 
+    url="{{ xnview_url }}"
+    dest="{{ tempdir.stdout }}/{{ xnview_name }}.deb"
+  when: xnview_check_deb.changed
+
+- name: Install xnview
+  apt: deb="{{ tempdir.stdout }}/{{ xnview_name }}.deb"
+  sudo: true
+  when: xnview_check_deb.changed
+
+- name: Remove Tempdir
+  file: path={{ tempdir.stdout }} state=absent
+  when: xnview_check_deb.changed
