@@ -1,0 +1,7 @@
+- name: Create directories
+  file: path={{ NAS_mountpoint }}/{{ item }} state=directory mode=0777 owner=500
+  with_items: "{{ NAS_shares }}"
+
+- name: Set mountpoints
+  mount: name={{ NAS_mountpoint }}/{{ item }} src={{NAS_host }}:{{ item }} fstype=nfs opts={{ NAS_options }} state=present
+  with_items: "{{ NAS_shares }}"

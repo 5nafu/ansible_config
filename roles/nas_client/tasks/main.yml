@@ -1,0 +1,4 @@
+# Workstation Tasks
+
+- include: basic_apps.yml
+- include: mount.yml
