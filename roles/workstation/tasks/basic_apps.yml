@@ -13,3 +13,5 @@
     - openjdk-8-jre
     - meld
     - p7zip-full
+    - unrar
+    - gnupg2
