@@ -15,3 +15,5 @@
     - p7zip-full
     - unrar
     - gnupg2
+    - ncdu
+    - fslint
