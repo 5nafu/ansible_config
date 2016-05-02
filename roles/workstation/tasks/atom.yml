@@ -19,7 +19,8 @@
 
 - name: Install atom
   apt: deb="{{ tempdir.stdout }}/{{ atom_name }}.deb"
-  sudo: true
+  become: true
+  become_user: root
   when: atom_check_deb.changed
 
 - name: Remove Tempdir

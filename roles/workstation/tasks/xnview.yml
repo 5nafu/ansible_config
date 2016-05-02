@@ -17,7 +17,8 @@
 
 - name: Install xnview
   apt: deb="{{ tempdir.stdout }}/{{ xnview_name }}.deb"
-  sudo: true
+  become: true
+  become_user: root
   when: xnview_check_deb.changed
 
 - name: Remove Tempdir
