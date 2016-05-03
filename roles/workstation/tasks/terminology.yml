@@ -1,0 +1,24 @@
+- name: Add Terminology Repository Key
+  apt_key:
+    keyserver: keyserver.ubuntu.com 
+    id: '0x62986116'
+    state: present 
+
+- name: Add Terminology Repository (>=2.1)
+  apt_repository: 
+    repo: 'deb http://ppa.launchpad.net/enlightenment-git/ppa/ubuntu wily main'
+    filename: terminology.list
+    update_cache: yes
+    state: present
+  when: (ansible_version.major >= 2 and ansible_version.minor >= 1)
+
+- name: Add Terminology Repository (<=2.1)
+  apt_repository: 
+    repo: 'deb http://ppa.launchpad.net/enlightenment-git/ppa/ubuntu wily main'
+    update_cache: yes
+    state: present
+  when: (ansible_version.major == 2 and ansible_version.minor < 1) or
+        (ansible_version.major < 2 )
+
+- name: Install Terminology 
+  apt: name=terminology state=present
