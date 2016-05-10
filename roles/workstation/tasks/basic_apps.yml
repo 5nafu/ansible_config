@@ -19,3 +19,9 @@
     - fslint
     - i3lock
     - xautolock
+
+
+- name: Remove harmful / unneeded
+  apt: name={{ item }} state=absent
+  with_items:
+    - xscreensaver
