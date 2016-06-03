@@ -1,0 +1,15 @@
+---
+- hosts: all
+  roles:
+    - common
+
+- hosts: datacenter
+  roles:
+    - datacenter
+    - { role: hw, when: facter_is_virtual == "false" }
+    - { role: monitoring-client, when: "'monitoring' not in group_names" }
+    - { role: postfix-satellite, when: "'mailserver' not in group_names" }
+- include: monitoring.yml
+- include: workstation.yml
+- include: router.yml
+

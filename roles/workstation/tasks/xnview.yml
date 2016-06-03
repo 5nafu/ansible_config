@@ -24,3 +24,6 @@
 - name: Remove Tempdir
   file: path={{ tempdir.stdout }} state=absent
   when: xnview_check_deb.changed
+
+- name: Install libgstreamer
+  apt: name=libgstreamer-plugins-base0.10-0 state=present

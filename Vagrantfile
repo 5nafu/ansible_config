@@ -6,14 +6,16 @@ Vagrant.configure(2) do |config|
 
   # Configuration deployment
   config.vm.provision "shell", inline: "sudo apt-get -y install facter"
-  config.vm.provision :ansible do |ansible|
+  config.vm.provision "ansible" do |ansible|
     ansible.groups = {
         "hypervisor" => ["visor"],
         "monitoring" => ["monitor"],
         "guest" => ["srv"],
-        "mailserver" => ["srv"]
+        "mailserver" => ["srv"],
+        "router" => ["rt2"]
+
     }
-    ansible.playbook = "datacenter.yml"
+    ansible.playbook = "all.yml"
     ansible.raw_arguments = [
       "--vault-password-file=./password.txt",
       "-b",
@@ -27,5 +29,9 @@ Vagrant.configure(2) do |config|
   config.vm.define 'srv' do |srv|
     srv.vm.hostname = "srv.foto23.com"
     srv.vm.network "private_network", ip: "192.168.33.11"
+  end
+  config.vm.define 'rt2' do |rt2|
+    rt2.vm.hostname = "rt2.buero.tvollmer.de"
+    rt2.vm.network "private_network", ip: "192.168.33.12"
   end
 end

@@ -11,4 +11,4 @@ sudo apt-get install -y ansible
 
 echo "running playbook"
 # Run playbook.
-ansible-playbook workstation.yml --vault-password-file ./password.txt -K $@
+ansible-playbook workstation.yml --vault-password-file ./password.txt $@

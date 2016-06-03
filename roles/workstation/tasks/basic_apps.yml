@@ -10,7 +10,7 @@
     - xsensors
     - lm-sensors
     - nfs-common
-    - openjdk-7-jre
+    - openjdk-8-jre
     - meld
     - p7zip-full
     - unrar
@@ -19,6 +19,8 @@
     - fslint
     - i3lock
     - xautolock
+    - vagrant
+    - virtualbox
 
 
 - name: Remove harmful / unneeded
