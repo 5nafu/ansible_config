@@ -1,0 +1,28 @@
+- name: get volume group
+  with_dict: "{{ ansible_lvm.vgs }}"
+  set_fact: volume_group={{ item.key }}
+  when: "{{ item.value.free_g > '1' }}"
+
+- name: create Volume groups
+  lvol: vg={{volume_group}} lv={{item.name}} size={{item.size}}
+  with_items: "{{ crypt_partitions }}"
+
+- name: setup crypttab
+  crypttab:
+    name: '{{ item.name }}'
+    backing_device: '/dev/{{volume_group}}/{{item.name}}' 
+    password: '/dev/urandom' 
+    state: 'present' 
+    opts: '{{item.opts}}'
+  with_items: "{{ crypt_partitions }}"
+  
+- name: Add set-owner script
+  template: src=set-owner dest=/usr/bin/set-owner owner=root group=root mode=0755
+
+- name: Mount crypted partitions
+  mount: 
+    name: '{{ item.mountpoint }}' 
+    src: '/dev/mapper/{{ item.name }}' 
+    fstype: '{{ item.fs }}'
+    state: 'present'
+  with_items: '{{ crypt_partitions }}'

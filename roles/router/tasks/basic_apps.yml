@@ -1,0 +1,21 @@
+- name: Install common hypervisor software
+  apt: name={{ item }} state=present
+  with_items:
+    - lvm2
+    - iptables-persistent
+    - cryptsetup
+    - ppp
+    - postfix
+    - privoxy
+    - sudo
+    - vim
+    - isc-dhcp-server
+    - bind9
+    - tmux
+    - htop
+    - openjdk-8-jre
+    - curl
+    #- i2p
+    #- i2p-keyring
+    #- freenet-daemon
+

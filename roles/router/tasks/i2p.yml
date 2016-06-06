@@ -1,0 +1,24 @@
+- name: Add i2p Repository Key
+  apt_key: 
+    id: '67ece5605bcf1346'
+    keyserver: keyserver.ubuntu.com
+    state: present 
+
+- name: Add i2p Repository (>=2.1)
+  apt_repository: 
+    repo: 'deb http://deb.i2p2.no/ xenial main'
+    filename: i2p.list
+    update_cache: yes
+    state: present
+  when: (ansible_version.major >= 2 and ansible_version.minor >= 1)
+
+- name: Add i2p Repository (<=2.1)
+  apt_repository: 
+    repo: 'deb http://deb.i2p2.no/ xenial main'
+    update_cache: yes
+    state: present
+  when: (ansible_version.major == 2 and ansible_version.minor < 1) or
+        (ansible_version.major < 2 )
+
+- name: Install i2p
+  apt: name=i2p state=present

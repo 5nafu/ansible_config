@@ -1,0 +1,103 @@
+- name: Instal requirements
+  apt: name={{ item }} state=present
+  with_items:
+    - default-jre-headless
+    - haveged
+
+- name: create groups
+  group: name=freenet state=present system=yes
+
+- name: create User
+  user: 
+    name: freenet 
+    comment: 'Freenet Daemon'  
+    group: freenet 
+    shell: /bin/false
+    createhome: no
+    home: /usr/local/freenet/
+    system: yes
+    
+- name: Create Installation directory
+  file:
+    owner: freenet
+    dest: /usr/local/freenet
+    state: directory
+
+- name: Check if freenet is already installed
+  command: ls /usr/local/freenet/run.sh
+  register: freenet_installed
+  changed_when: freenet_installed.rc > 1
+  ignore_errors: yes
+
+- name: create a temp directory
+  command: mktemp -d "{{ lookup('env', 'TMPDIR') |default('/tmp', true) }}/ansible.XXXX"
+  register: tempdir
+  when: freenet_installed.changed
+  become: yes
+  become_user: freenet
+
+- name: add Installation options
+  lineinfile:
+    create: yes
+    dest: '{{ tempdir.stdout }}/freenet_installer_options.conf'
+    line: 'INSTALL_PATH=/usr/local/freenet'
+  when: freenet_installed.changed
+  become: yes
+  become_user: freenet
+
+- name: Download Installer
+  get_url:
+    dest: '{{ tempdir.stdout }}/new_installer_offline.jar'
+    url: 'https://freenetproject.org/assets/jnlp/freenet_installer.jar'
+  when: freenet_installed.changed
+  become: yes
+  become_user: freenet
+
+- name: install Freenet
+  command: 'java -jar {{ tempdir.stdout }}/new_installer_offline.jar -options {{ tempdir.stdout }}/freenet_installer_options.conf'
+  args:
+    chdir: /usr/local/freenet
+  become: yes
+  become_user: freenet
+  when: freenet_installed.changed
+  
+- name: Remove Tempdir
+  file: path={{ tempdir.stdout }} state=absent
+  when: freenet_installed.changed
+
+- name: Configure Freenet
+  lineinfile:
+    create: yes
+    dest: '/usr/local/freenet/freenet.ini' 
+    regexp: '{{ item.regexp }}' 
+    line: '{{ item.line }}'
+    state: '{{ item.state }}'
+  with_items: '{{ freenet_options }}'
+  
+
+- name: Check if the last line in the freenet.ini is "End"
+  shell: 'tail -1 /usr/local/freenet/freenet.ini | grep "^End$"'
+  register: freenet_ini_end
+  changed_when: freenet_ini_end.rc > 0
+  failed_when: "'No such file or directory' in '{{freenet_ini_end.stdout}}'"
+  
+- name: Remove wrong End tags
+  lineinfile:
+    create: no
+    dest: '/usr/local/freenet/freenet.ini' 
+    regexp: '^End$' 
+    state: absent
+  when: freenet_ini_end.changed
+
+- name: Re-add proper End tags
+  lineinfile:
+    create: no
+    dest: '/usr/local/freenet/freenet.ini' 
+    line: 'End'
+    insertafter: 'EOF'
+    state: present
+  when: freenet_ini_end.changed
+
+
+
+
