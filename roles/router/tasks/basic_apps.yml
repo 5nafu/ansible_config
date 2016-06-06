@@ -15,7 +15,3 @@
     - htop
     - openjdk-8-jre
     - curl
-    #- i2p
-    #- i2p-keyring
-    #- freenet-daemon
-

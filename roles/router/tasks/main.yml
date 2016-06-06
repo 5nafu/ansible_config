@@ -1,7 +1,7 @@
 # Router Tasks
 
-#- include: basic_apps.yml
-#- include: mklvol.yml
-#- include: tor.yml
-#- include: freenet.yml
+- include: basic_apps.yml
+- include: mklvol.yml
+- include: tor.yml
+- include: freenet.yml
 - include: i2p.yml
