@@ -5,7 +5,7 @@ Vagrant.configure(2) do |config|
   config.vm.box = "debian/jessie64"
 
   # Configuration deployment
-  config.vm.provision "shell", inline: "sudo apt-get -y install facter"
+  config.vm.provision "shell", inline: "sudo apt-get -y install facter python"
   config.vm.provision "ansible" do |ansible|
     ansible.groups = {
         "hypervisor" => ["visor"],
