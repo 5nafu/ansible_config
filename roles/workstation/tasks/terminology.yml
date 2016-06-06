@@ -6,7 +6,7 @@
 
 - name: Add Terminology Repository (>=2.1)
   apt_repository: 
-    repo: 'deb http://ppa.launchpad.net/enlightenment-git/ppa/ubuntu wily main'
+    repo: 'deb http://ppa.launchpad.net/enlightenment-git/ppa/ubuntu xenial main'
     filename: terminology.list
     update_cache: yes
     state: present
@@ -14,7 +14,7 @@
 
 - name: Add Terminology Repository (<=2.1)
   apt_repository: 
-    repo: 'deb http://ppa.launchpad.net/enlightenment-git/ppa/ubuntu wily main'
+    repo: 'deb http://ppa.launchpad.net/enlightenment-git/ppa/ubuntu xenial main'
     update_cache: yes
     state: present
   when: (ansible_version.major == 2 and ansible_version.minor < 1) or
