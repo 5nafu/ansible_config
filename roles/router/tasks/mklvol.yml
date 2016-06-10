@@ -3,7 +3,7 @@
   set_fact: volume_group={{ item.key }}
   when: "{{ item.value.free_g > '1' }}"
 
-- name: create Volume groups
+- name: create logical Volumes
   lvol: vg={{volume_group}} lv={{item.name}} size={{item.size}}
   with_items: "{{ crypt_partitions }}"
 
