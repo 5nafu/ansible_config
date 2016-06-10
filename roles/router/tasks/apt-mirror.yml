@@ -1,0 +1,19 @@
+- name: Create directory
+  file: path={{ mirror_mountpoint }}/{{ mirror_sharename }} state=directory mode=0777 owner=500
+
+- name: Set mountpoint
+  mount: name={{ mirror_mountpoint }}/{{ mirror_sharename }} src={{mirror_host }}:{{ mirror_sharename }} fstype=nfs opts={{ mirror_options }} state=present
+
+- name: Install apt-mirror
+  apt: name=apt-mirror state=present
+
+- name: Add apt-mirror config
+  template: src=mirror.list dest=/etc/apt/mirror.list owner=root group=root mode=0644
+
+- name: enable cronjob for apt-mirror
+  lineinfile:
+    dest: /etc/cron.d/apt-mirror
+    line: "0 4	* * *	apt-mirror	/usr/bin/apt-mirror > /var/spool/apt-mirror/var/cron.log"
+    regexp: "/usr/bin/apt-mirror"
+    state: present
+    
