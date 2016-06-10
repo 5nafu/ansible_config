@@ -1,6 +1,8 @@
 ############# config ##################
 #
-set base_path    {{ mirror_mountpoint }}/{{ mirror_sharename }}/debian/
+set base_path    {{ mirror_mountpoint }}/{{ mirror_sharename }}/apt-mirror
+set mirror_path  {{ mirror_mountpoint }}/{{ mirror_sharename }}/mirror
+
 set run_postmirror 1
 set nthreads     20
 set _tilde 0
