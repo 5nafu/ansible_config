@@ -3,6 +3,8 @@
 # Go to Directory of script
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 
+git pull
+
 echo "Installing predependencies on master"
 # Install predependencies Manually
 sudo apt-get install -y ansible
