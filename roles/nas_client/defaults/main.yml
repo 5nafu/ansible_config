@@ -3,3 +3,4 @@ NAS_mountpoint: /mnt/NAS
 NAS_host: tear
 NAS_options: defaults,soft,timeo=10,intr,user
 NAS_shares: [ "Gesichert", "Ungesichert" ]
+NAS_state: present
