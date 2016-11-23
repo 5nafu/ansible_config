@@ -1,18 +1,8 @@
-[datacenter]
-hypervisor
-monitoring
-
-
-[hypervisor]
-srv.buero.tvollmer.de ansible_ssh_user=root
-visor.foto23.com ansible_ssh_user=snafu ansible_become=true
-
-[monitoring]
-monitor ansible_ssh_host=78.46.205.62 ansible_ssh_user=root
+rt2.fritz.box
+localhost ansible_connection=local ansible_become=true
 
 [router]
-rt2.buero.tvollmer.de ansible_ssh_user=root
-rt2 ansible_ssh_user=root
+rt2.fritz.box
 
 [local]
-localhost ansible_connection=local ansible_become=true
+localhost
