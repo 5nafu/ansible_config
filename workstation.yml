@@ -1,5 +1,5 @@
 ---
-- hosts: local:!datacenter
+- hosts: local
   roles:
     - common
     - workstation
