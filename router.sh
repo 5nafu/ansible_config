@@ -5,9 +5,11 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"
 
 git pull
 
-echo "Installing predependencies on master"
-# Install predependencies Manually
-sudo apt-get install -y ansible
+command -v ansible >/dev/null 2>&1 || {
+  echo "Installing predependencies on master"
+  # Install predependencies Manually
+  sudo apt-get install -y ansible
+}
 
 echo "Installing predependencies on slave"
 # Install predependencies Manually
