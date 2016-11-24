@@ -1,6 +1,7 @@
 # Router Tasks
 
 - include: basic_apps.yml
+- include: nut.yml
 - include: mklvol.yml
 - include: apt-mirror.yml
 - include: tor.yml

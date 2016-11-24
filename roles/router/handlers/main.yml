@@ -1,0 +1,5 @@
+- name: restart nut
+  service: name={{item}} state=restarted
+  with_items:
+    - nut-server
+    - ups-monitor

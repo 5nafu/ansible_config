@@ -1,0 +1,9 @@
+#! /bin/bash
+echo "$(date) - ${NOTIFYTYPE:-TESTING} - $*" >>/tmp/nut.log
+sendmail -f"nut@rt2.buero.tvollmer.de" info@tvollmer.de <<EOF
+subject: Message from UPS for event ${NOTIFYTYPE:-TESTING}
+from: nut@rt2.buero.tvollmer.de
+
+Received following message from UPS @ $(date) for event ${NOTIFYTYPE:-TESTING}:
+$*
+EOF

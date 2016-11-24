@@ -1,0 +1,17 @@
+[testuser]
+  password = {{ nut_passwords.testuser }}
+  instcmds = test.battery.start.quick
+  instcmds = test.battery.start.deep
+  instcmds = test.battery.stop
+
+[upsmon]
+  password = {{ nut_passwords.upsmon }}
+  upsmon master
+
+[admin]
+  password = {{ nut_passwords.admin }}
+  upsmon slave
+
+[root]
+  password = {{ nut_passwords.root }}
+  instcmds = ALL

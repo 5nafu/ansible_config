@@ -1,0 +1,79 @@
+- name: Install NUT
+  apt: pkg=nut state=present
+  register: nut_installed
+
+- name: Reload udev rules
+  shell: "{{ item }}"
+  become: true
+  when: nut_installed|changed
+  with_items:
+    - udevadm control --reload-rules
+    - udevadm trigger
+
+- name: Configure /etc/nut/nut.conf
+  lineinfile: dest=/etc/nut/nut.conf regexp=^MODE line="MODE=netserver"
+  notify:
+    - restart nut
+
+- name: Configure ups.conf
+  ini_file:
+    dest: /etc/nut/ups.conf
+    create: no
+    mode: 0640
+    group: nut
+    section: qnapups
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_items:
+    - { key: 'driver', value: 'usbhid-ups' }
+    - { key: 'port', value: 'auto' }
+  notify:
+    - restart nut
+
+- name: Add Listening handler
+  lineinfile: dest=/etc/nut/upsd.conf line="{{ item }}"
+  with_items:
+    - LISTEN 192.168.1.200 3493
+    - LISTEN 127.0.0.1 3493
+    - LISTEN ::1 3493
+  notify:
+    - restart nut
+
+- name: Copy upsd.users
+  template: src=upsd.users.j2 dest=/etc/nut/upsd.users owner=root group=nut mode=640
+  notify:
+    - restart nut
+
+- name: Copy notify script
+  copy: src=nut_notify_script dest=/usr/bin/nut_notify_script owner=root group=nut mode=755 backup=no
+  notify:
+    - restart nut
+
+- name: Configure /etc/nut/upsmon.conf
+  lineinfile: dest=/etc/nut/upsmon.conf regexp="{{ item.regex }}" line="{{ item.line }}"
+  no_log: "{{ item.nolog | default(False) }}"
+  with_items:
+    - { regex: '^MONITOR', line: 'MONITOR qnapups@localhost 1 upsmon {{ nut_passwords.upsmon }} master', nolog: True}
+    - { regex: '^MINSUPPLIES', line: 'MINSUPPLIES 1' }
+    - { regex: '^SHUTDOWNCMD', line: 'SHUTDOWNCMD "/sbin/shutdown -h +0"' }
+    - { regex: '^NOTIFYCMD', line: 'NOTIFYCMD /usr/bin/nut_notify_script' }
+    - { regex: '^POLLFREQ ', line: 'POLLFREQ 5' }
+    - { regex: '^POLLFREQALERT', line: 'POLLFREQALERT 5' }
+    - { regex: '^HOSTSYNC', line: 'HOSTSYNC 15' }
+    - { regex: '^DEADTIME', line: 'DEADTIME 15' }
+    - { regex: '^POWERDOWNFLAG', line: 'POWERDOWNFLAG /etc/killpower' }
+    - { regex: '^NOTIFYFLAG ONLINE', line: 'NOTIFYFLAG ONLINE	EXEC+SYSLOG+WALL' }
+    - { regex: '^NOTIFYFLAG ONBATT', line: 'NOTIFYFLAG ONBATT	EXEC+SYSLOG+WALL' }
+    - { regex: '^NOTIFYFLAG LOWBATT', line: 'NOTIFYFLAG LOWBATT	EXEC+SYSLOG+WALL' }
+    - { regex: '^NOTIFYFLAG FSD', line: 'NOTIFYFLAG FSD	EXEC+SYSLOG+WALL' }
+    - { regex: '^NOTIFYFLAG COMMOK', line: 'NOTIFYFLAG COMMOK	EXEC+SYSLOG+WALL' }
+    - { regex: '^NOTIFYFLAG COMMBAD', line: 'NOTIFYFLAG COMMBAD	EXEC+SYSLOG+WALL' }
+    - { regex: '^NOTIFYFLAG SHUTDOWN', line: 'NOTIFYFLAG SHUTDOWN	EXEC+SYSLOG+WALL' }
+    - { regex: '^NOTIFYFLAG REPLBATT', line: 'NOTIFYFLAG REPLBATT	EXEC+SYSLOG+WALL' }
+    - { regex: '^NOTIFYFLAG NOCOMM', line: 'NOTIFYFLAG NOCOMM	EXEC+SYSLOG+WALL' }
+    - { regex: '^NOTIFYFLAG NOPARENT', line: 'NOTIFYFLAG NOPARENT	EXEC+SYSLOG+WALL' }
+    - { regex: '^RBWARNTIME', line: 'RBWARNTIME 43200' }
+    - { regex: '^NOCOMMWARNTIME', line: 'NOCOMMWARNTIME 300' }
+    - { regex: '^FINALDELAY', line: 'FINALDELAY 5' }
+  notify:
+    - restart nut
