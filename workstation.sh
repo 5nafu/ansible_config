@@ -10,7 +10,8 @@ echo "Installing predependencies"
 sudo apt-get install -y ansible
 
 if [ ! -f ./password.txt ]; then
-echo "ERROR! Password file 'password.txt' does not exist"
+  echo "ERROR! Password file 'password.txt' does not exist"
+fi
 
 echo "running playbook"
 # Run playbook.
