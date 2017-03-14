@@ -4,4 +4,4 @@
     - common
     - workstation
     - hypervisor
-    - nas_client
+    - { role: nas_client, when: "ansible_nodename == 'andor'" }
