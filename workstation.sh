@@ -15,5 +15,9 @@ echo "Installing predependencies on slave"
 # Install predependencies Manually
 ansible local --vault-password-file ./password.txt -m apt -a "name=facter state=present update_cache=true" -o $@
 
+if [ ! -f ./password.txt ]; then
+  echo "ERROR! Password file 'password.txt' does not exist"
+fi
+
 echo "running playbook"
 ansible-playbook --vault-password-file ./password.txt workstation.yml $@
