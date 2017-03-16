@@ -21,6 +21,7 @@
     - xautolock
     - vagrant
     - virtualbox
+    - virtualenv
 
 
 - name: Remove harmful / unneeded
