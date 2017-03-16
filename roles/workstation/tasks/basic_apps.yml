@@ -2,26 +2,27 @@
   apt: name={{ item }} state=present
   with_items:
     - conky-all
-    - vlc
-    - terminology
     - curl
-    - xfce4-sensors-plugin
-    - xfce4-goodies
-    - xsensors
+    - fslint
+    - gnupg2
+    - i3lock
     - lm-sensors
+    - meld
+    - ncdu
     - nfs-common
     - openjdk-8-jre
-    - meld
     - p7zip-full
+    - python-dev
+    - terminology
     - unrar
-    - gnupg2
-    - ncdu
-    - fslint
-    - i3lock
-    - xautolock
     - vagrant
     - virtualbox
     - virtualenv
+    - vlc
+    - xautolock
+    - xfce4-goodies
+    - xfce4-sensors-plugin
+    - xsensors
 
 
 - name: Remove harmful / unneeded
