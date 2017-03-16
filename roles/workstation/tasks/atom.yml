@@ -4,11 +4,33 @@
     return_content: yes
   register: atomrelease
 
+- set_fact: atom_filename='atom-{{ hostvars[inventory_hostname].facter_architecture }}.deb'
+
+- name: Iterate through release to get Atom DownloadURL
+  set_fact: atom_url="{{ item.browser_download_url }}"
+  with_items: "{{atomrelease.json.assets}}"
+  when: "atom_filename in item.name"
+  no_log: true
+
 - name: Check if atom is installed
   command: dpkg-query -W -f='${Version}' atom
   register: atom_check_deb
   failed_when: atom_check_deb.rc > 1
   changed_when: "'{{atomrelease.json.name}}' not in '{{atom_check_deb.stdout}}'"
+
+- name: Updating Atom
+  vars:
+    msg: [
+         "Installed Atom version ({{ atom_check_deb.stdout }}) differs from the",
+         "latest version {{ atomrelease.json.name }}.",
+         "Downloading {{ atom_filename }} from {{ atom_url }}"]
+  debug:
+    msg: "{{ msg }}"
+  when: atom_check_deb.changed
+
+- name: Atom current
+  debug: msg="Current Atom version ({{ atom_check_deb.stdout }}) is up to date."
+  when: not atom_check_deb.changed
 
 - name: create a temp directory
   command: mktemp -d "{{ lookup('env', 'TMPDIR') |default('/tmp', true) }}/ansible.XXXX"
@@ -18,11 +40,11 @@
 - name: Download atom
   get_url:
     url="{{ atom_url }}"
-    dest="{{ tempdir.stdout }}/{{ atom_name }}.deb"
+    dest="{{ tempdir.stdout }}/{{ atom_filename }}"
   when: atom_check_deb.changed
 
 - name: Install atom
-  apt: deb="{{ tempdir.stdout }}/{{ atom_name }}.deb"
+  apt: deb="{{ tempdir.stdout }}/{{ atom_filename }}"
   become: true
   become_user: root
   when: atom_check_deb.changed
@@ -35,5 +57,3 @@
   apt: name={{ item }} state=present
   with_items:
     - flake8
-
-- debug: var=atomrelease.json.assets
