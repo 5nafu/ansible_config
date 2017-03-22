@@ -1,0 +1,63 @@
+- name: Get latest release of saenzramiro/rambox 
+  uri:
+    url: https://api.github.com/repos/saenzramiro/rambox/releases/latest
+    return_content: yes
+  register: ramboxrelease
+
+- set_fact: rambox_filename='Rambox_{{ ramboxrelease.json.name }}-x64.deb'
+  when: "hostvars[inventory_hostname].facter_architecture == 'amd64'"
+
+- set_fact: rambox_filename='Rambox_{{ ramboxrelease.json.name }}-ia32.deb'
+  when: "hostvars[inventory_hostname].facter_architecture != 'amd64'"
+
+- name: Iterate through release to get Rambox DownloadURL
+  set_fact: rambox_url="{{ item.browser_download_url }}"
+  with_items: "{{ramboxrelease.json.assets}}"
+  when: "rambox_filename in item.name"
+  no_log: true
+
+- name: Check if rambox is installed
+  command: dpkg-query -W -f='${Version}' rambox
+  register: rambox_check_deb
+  failed_when: rambox_check_deb.rc > 1
+  changed_when: "'{{ramboxrelease.json.name}}' not in '{{rambox_check_deb.stdout}}'"
+
+- name: Updating Rambox
+  vars:
+    msg: [
+         "Installed Rambox version ({{ rambox_check_deb.stdout }}) differs from the",
+         "latest version {{ ramboxrelease.json.name }}.",
+         "Downloading {{ rambox_filename }} from {{ rambox_url }}"]
+  debug:
+    msg: "{{ msg }}"
+  when: rambox_check_deb.changed
+
+- name: Rambox current
+  debug: msg="Current Rambox version ({{ rambox_check_deb.stdout }}) is up to date."
+  when: not rambox_check_deb.changed
+
+- name: create a temp directory
+  command: mktemp -d "{{ lookup('env', 'TMPDIR') |default('/tmp', true) }}/ansible.XXXX"
+  register: tempdir
+  when: rambox_check_deb.changed
+
+- name: Download rambox
+  get_url:
+    url="{{ rambox_url }}"
+    dest="{{ tempdir.stdout }}/{{ rambox_filename }}"
+  when: rambox_check_deb.changed
+
+- name: Install rambox
+  apt: deb="{{ tempdir.stdout }}/{{ rambox_filename }}"
+  become: true
+  become_user: root
+  when: rambox_check_deb.changed
+
+- name: Remove Tempdir
+  file: path={{ tempdir.stdout }} state=absent
+  when: rambox_check_deb.changed
+
+- name: Install rambox dependencies
+  apt: name={{ item }} state=present
+  with_items:
+    - flake8
