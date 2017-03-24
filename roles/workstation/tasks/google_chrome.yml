@@ -1,18 +1,18 @@
 - name: Add Google Chrome Repository Key
-  apt_key: 
+  apt_key:
     url: "https://dl.google.com/linux/linux_signing_key.pub"
-    state: present 
+    state: present
 
 - name: Add Google Chrome Repository (>=2.1)
-  apt_repository: 
+  apt_repository:
     repo: 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main'
-    filename: google-chrome.list
+    filename: google-chrome
     update_cache: yes
     state: present
   when: (ansible_version.major >= 2 and ansible_version.minor >= 1)
 
 - name: Add Google Chrome Repository (<=2.1)
-  apt_repository: 
+  apt_repository:
     repo: 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main'
     update_cache: yes
     state: present
