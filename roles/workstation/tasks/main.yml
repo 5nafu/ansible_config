@@ -4,5 +4,6 @@
 - include: google_chrome.yml
 - include: basic_apps.yml
 - include: atom.yml
+- include: rambox.yml
 - include: xnview.yml
 - include: yubico.yml
